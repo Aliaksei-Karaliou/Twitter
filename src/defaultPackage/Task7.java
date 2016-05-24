@@ -1,31 +1,22 @@
 package defaultPackage;
 
+import files.FileLines;
+import files.IParser;
+import files.state.State;
+import files.state.StateParser;
+import graphics.StatesScreen;
+
 import java.awt.*;
+import java.awt.List;
+import java.util.*;
 import javax.swing.*;
 
-public class Task7 extends JFrame {
-
-    static final String appTitle = "Frame-&Application";
-
-    public static void main(String[] args) {
-        Task7 fr = new Task7();
-        fr.setBackground(Color.LIGHT_GRAY);
-        fr.setSize(new Dimension(400, 400));
-        fr.setTitle( appTitle );
-        fr.setVisible(true);
-        fr.repaint();
+public class Task7 implements ITask {
+    @Override
+    public void task(String[] args) {
+        IParser<java.util.List<State>> statesParser=new StateParser();
+        java.util.List<String> listy= FileLines.fileInputLines("D:\\trends\\data\\states.json");
+        java.util.List<State> allStates=statesParser.parse(listy.get(0));
+        StatesScreen window=new StatesScreen(allStates);
     }
-
-     public void paint(Graphics g) {
-        Dimension size = this.getSize();
-        int[] xs = {
-                (2 * size.width) / 3 };
-        int[] ys = { (2 * size.height) / 3,
-                size.height / 3, (2 * size.height) / 3 };
-        Polygon triangle = new Polygon(xs, ys, xs.length );
-        g.setColor( Color.red );
-        g.fillPolygon(triangle);
-    }
-
-
 }

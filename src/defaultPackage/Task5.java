@@ -45,7 +45,6 @@ public class Task5 implements ITask {
                 IParser<List<State>> statesParser=new StateParser();
                 List<String> listy=FileLines.fileInputLines("D:\\trends\\data\\states.json");
                 List<State> allStates=statesParser.parse(listy.get(0));
-                while (true);
             }
         }
         catch (Throwable exc) {
