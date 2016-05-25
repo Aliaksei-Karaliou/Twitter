@@ -40,7 +40,6 @@ public class StatesScreen extends JFrame {
             Polygon state=new Polygon(Xarr,Yarr, Xarr.length);
             g.setColor(new Color((int)(Math.random()*16777216)));
             g.fillPolygon(state);
-            System.out.println(list.get(i).getName());
         }
     }
 

@@ -3,6 +3,8 @@ package files.state;
 import defaultPackage.Coordinate;
 import files.IParser;
 
+import java.awt.*;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +18,7 @@ public class State{
 	public void setName(String name){
 		this.name=name;
 	}
-	
+
 	private Coordinate[] points;
 	public Coordinate[] getCoordinates(){
 		return points;
@@ -26,33 +28,25 @@ public class State{
 		points=new Coordinate[0];
 	}
 
-	public void AddCoordinate(Coordinate newCoordinate){
-		ArrayList<Coordinate> buf=new ArrayList<Coordinate>(Arrays.asList(points));
+	public void AddCoordinate(Coordinate newCoordinate) {
+		ArrayList<Coordinate> buf = new ArrayList<Coordinate>(Arrays.asList(points));
 		buf.add(newCoordinate);
-		points=buf.toArray(points);
+		points = buf.toArray(points);
 	}
 
-	public static class StateParser implements IParser<List<State>> {
+	private Polygon getPolygon(){
+		Polygon result=new Polygon();
+		for (int i=0;i<points.length;i++)
+			result.addPoint((int)(points[i].getLatitude()*10),(int)(points[i].getLongitude()*10));
+		return result;
+	}
+	public boolean constains(Point point){
+		Polygon polygon=getPolygon();
+		return polygon.contains(point);
+	}
 
-        @Override
-        public List<State> parse(String line) {
-            Vector<State> result=new Vector<State>();
-            String[] allStates=line.split("\"");
-            for (int i=1;i<allStates.length;i+=2){
-                String stateName=allStates[i];
-                String stringCoor=allStates[i+1];
-                stringCoor=stringCoor.replaceAll("\\[(\\[)*", "(");
-                stringCoor=stringCoor.replaceAll("\\](\\])*((,)|(\\}))", ")");
-                stringCoor=stringCoor.replaceAll("\\) \\(", "\\)#\\(");
-                stringCoor=stringCoor.substring(2);
-                String[] allCoor=stringCoor.split("#");
-                State newState=new State(stateName);
-                for (int j=0;j<allCoor.length;j++)
-                    newState.AddCoordinate(new Coordinate(allCoor[j]));
-                result.add(newState);
-            }
-            return result;
-        }
-
-    }
+	@Override
+	public boolean equals(Object obj) {
+		return ((State)obj).getName()==name;
+	}
 }

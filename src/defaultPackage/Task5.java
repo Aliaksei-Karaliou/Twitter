@@ -38,13 +38,28 @@ public class Task5 implements ITask {
                 System.out.println(weight.Find(list));
             }
             else if (args[0].equals("2")){
+                //Load from Command Line
                 SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
                 Date start = format.parse(args[2]+" "+args[3]);
                 Date finish = format.parse(args[4]+" "+args[5]);
                 List<Tweet> list=FileLines.fileInputLines(args[1],start,finish);
+                //Load State
                 IParser<List<State>> statesParser=new StateParser();
-                List<String> listy=FileLines.fileInputLines("D:\\trends\\data\\states.json");
-                List<State> allStates=statesParser.parse(listy.get(0));
+                java.util.List<String> listState= FileLines.fileInputLines("D:\\trends\\data\\states.json");
+                java.util.List<State> allStates=statesParser.parse(listState.get(0));
+                int[] arr=new int[allStates.size()];
+                for (int i=0;i<list.size();i++){
+                    try {
+                        State state = list.get(i).getState(allStates);
+                        arr[allStates.indexOf(state)]++;
+                    }
+                    catch (Throwable exc){}
+                }
+                int maxInd=0;
+                for (int i=1;i<arr.length;i++)
+                    if (arr[i]>arr[maxInd])
+                        maxInd=i;
+                System.out.println(allStates.get(maxInd).getName());
             }
         }
         catch (Throwable exc) {
